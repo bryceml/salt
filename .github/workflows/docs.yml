@@ -1,0 +1,37 @@
+name: docs
+
+on: [push]
+
+jobs:
+  docs-html:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.7.6
+    steps:
+    - uses: actions/checkout@v2
+    - name: pip install
+      run: |
+       python --version
+       pip install -U nox-py2==2019.6.25
+       nox --version
+    - run: nox -e 'docs-html(compress=True)'
+    - uses: actions/upload-artifact@v1
+      with:
+        name: docs-html
+        path: doc/html-archive.tar.xz
+  docs-man:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.7.6
+    steps:
+    - uses: actions/checkout@v2
+    - name: pip install
+      run: |
+       python --version
+       pip install -U nox-py2==2019.6.25
+       nox --version
+    - run: nox -e 'docs-man(compress=True, update=False)'
+    - uses: actions/upload-artifact@v1
+      with:
+        name: docs-html
+        path: doc/man-archive.tar.xz
